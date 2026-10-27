@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SalzCheck – Reaktionsgleichungen üben</title>
+<style>
+:root{--bg:#f3f6ff;--card:#fff;--ink:#1d2433;--mut:#5b6478;--pri:#3b5bdb;--pri2:#5c7cfa;--acc:#ff922b;--ok:#2b8a3e;--okbg:#ebfbee;--bad:#c92a2a;--badbg:#fff0f0;--info:#1c7ed6;--infobg:#e7f5ff;--line:#dbe2f5;--r:16px}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;font-size:17px}
+.top{background:linear-gradient(135deg,#364fc7,#7048e8);color:#fff;padding:10px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:5;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+.brand{font-weight:800;font-size:1.3rem;cursor:pointer;letter-spacing:.3px}
+.top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.xp{background:rgba(255,255,255,.18);padding:5px 12px;border-radius:999px;font-weight:600;font-size:.95rem}
+button{font:inherit;cursor:pointer}
+.ghost{background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.4);padding:6px 12px;border-radius:10px}
+.ghost:hover{background:rgba(255,255,255,.3)}
+.ghost.dark{background:#fff;color:var(--pri);border:1px solid var(--line)}
+.ghost.dark:hover{background:#eef2ff}
+main{max-width:980px;margin:0 auto;padding:18px 14px 60px}
+h1{margin:.2em 0 .1em;font-size:1.9rem}
+.lead{color:var(--mut);margin:0 0 18px}
+.grid{display:grid;gap:16px}
+.card{background:var(--card);border-radius:var(--r);padding:18px 20px;box-shadow:0 3px 14px rgba(40,60,140,.09);border:1px solid var(--line)}
+.mission h2{margin:0 0 4px;font-size:1.25rem}
+.mission p{margin:0 0 12px;color:var(--mut)}
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.lvl{background:#f1f4ff;border:2px solid #d5defc;border-radius:12px;padding:10px 12px;text-align:left;color:var(--ink);transition:.15s}
+.lvl:hover{border-color:var(--pri2);transform:translateY(-2px);background:#e8edff}
+.lvl b{display:block;font-size:.8rem;color:var(--pri);text-transform:uppercase;letter-spacing:.5px}
+.lvl span.n{display:block;font-weight:700}
+.lvl .st{color:#f59f00;letter-spacing:2px;font-size:1.05rem}
+.howto{background:var(--infobg);border:1px solid #b6dcf8;border-radius:12px;padding:10px 14px;margin:0 0 16px;font-size:.95rem}
+.rbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.rtitle{font-weight:700;flex:1;min-width:200px}
+.dots{display:flex;gap:6px}
+.dot{width:14px;height:14px;border-radius:50%;background:#d0d7ee}
+.dot.cur{outline:3px solid var(--pri2);outline-offset:1px}
+.dot.first{background:var(--ok)}.dot.ok{background:#f59f00}.dot.fail{background:var(--bad)}
+.rpts{font-weight:700;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px 12px}
+.qnum{font-size:.8rem;text-transform:uppercase;letter-spacing:.6px;color:var(--pri);font-weight:700;margin-bottom:6px}
+.prompt p{margin:.4em 0}
+.tag2{display:inline-block;background:#fff4e6;color:#d9480f;border:1px solid #ffd8a8;border-radius:999px;padding:1px 12px;font-size:.85rem;font-weight:700;margin-bottom:6px}
+.tag2.elektro{background:#f3f0ff;color:#6741d9;border-color:#d0bfff}
+.word{background:#f8f9fc;border:1px dashed #c5cde6;border-radius:12px;padding:10px 14px;margin:8px 0;font-size:1.12rem}
+.textq{background:#f8f9fc;border-left:5px solid var(--pri2);border-radius:8px;padding:10px 14px;margin:8px 0;font-size:1.12rem}
+.small{font-size:.92rem;color:var(--mut)}
+.qmark{display:inline-block;background:#ffe3e3;color:var(--bad);font-weight:800;border-radius:8px;padding:0 10px}
+.arrow2{margin:0 .3em}.arrow2 small{display:block;font-size:.6em;text-align:center;line-height:1;color:var(--mut)}
+.arrow2{display:inline-block;text-align:center}
+.ion{display:inline-block;background:#e7f5ff;border:1px solid #a5d8ff;border-radius:8px;padding:0 8px;font-weight:700;font-size:1.1em}
+sub,sup{font-size:.68em;line-height:0}
+.field{margin:12px 0 2px}
+.field label{display:block;font-weight:600;margin-bottom:4px}
+input.chem{font-size:1.35rem;padding:8px 12px;border:2px solid var(--line);border-radius:12px;width:min(100%,24rem);font-family:inherit;background:#fff}
+input.chem.wide{width:100%}
+input.chem:focus,select:focus{outline:none;border-color:var(--pri2);box-shadow:0 0 0 4px rgba(92,124,250,.2)}
+input.chem.ok{border-color:var(--ok);background:var(--okbg)}
+input.chem.bad{border-color:var(--bad);background:var(--badbg)}
+input.chem.gap{width:11rem;display:inline-block;padding:4px 10px}
+.kbd{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.key{min-width:40px;padding:4px 10px;border-radius:10px;border:1px solid #c7d2f5;background:#eef2ff;color:var(--pri);font-size:1.1rem;font-weight:600}
+.key:hover{background:#dbe4ff}.key.wide{padding:4px 12px}
+.eq{font-size:1.55rem;display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .6rem;margin:14px 0 6px}
+.eq .plus{color:var(--mut);font-weight:700}
+.eq .arrow{display:inline-flex;flex-direction:column;align-items:center;font-size:1.7rem;line-height:1}
+.eq .arrow small{font-size:.5rem;color:var(--mut);margin-bottom:2px}
+.term{display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap}
+.coef{font-weight:700;margin-right:.15em}
+.st{font-size:.65em;color:var(--mut);margin-left:.1em}
+.coefsel{font-size:1.3rem;border:2px solid var(--pri2);border-radius:10px;padding:.15rem .25rem;background:#fff;font-family:inherit;color:var(--ink)}
+.coefpre{display:inline-block;min-width:2rem;text-align:center;background:#e9ecef;border-radius:10px;padding:.15rem .5rem;font-weight:700;font-size:1.3rem;color:#495057}
+.fb{margin-top:10px;border-radius:12px;padding:0}
+.fb.ok,.fb.bad,.fb.info{padding:10px 14px}
+.fb.ok{background:var(--okbg);border:1px solid #8ce99a;color:#1b5e20}
+.fb.bad{background:var(--badbg);border:1px solid #ffa8a8;color:#7d1a1a}
+.fb.info{background:var(--infobg);border:1px solid #a5d8ff;color:#104e8b}
+.fb p{margin:.4em 0}
+.note{font-size:.92rem}
+.bil{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.bil .b{background:#fff;border:1px solid #cfd6ea;border-radius:10px;padding:3px 10px;font-size:.95rem}
+.bil .b.ok{border-color:#69db7c;background:#f4fff6}.bil .b.no{border-color:#ff8787;background:#fff5f5;font-weight:700}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center}
+.btn{background:var(--pri);color:#fff;border:none;border-radius:12px;padding:10px 22px;font-weight:700;font-size:1.05rem;box-shadow:0 3px 0 #2b44a8}
+.btn:hover{background:#4263eb}.btn:active{transform:translateY(2px);box-shadow:none}
+.btn.sec{background:#fff;color:var(--pri);border:2px solid var(--pri2);box-shadow:none;padding:8px 16px;font-weight:600}
+.btn.sec:hover{background:#eef2ff}
+.btn.go{background:var(--ok);box-shadow:0 3px 0 #1e6a2d}.btn.go:hover{background:#37a24b}
+.btn:disabled{opacity:.5;cursor:default}
+.tippbox{margin-top:12px}
+.tippbox .t{background:#fff9db;border:1px solid #ffe066;border-radius:12px;padding:8px 14px;margin-top:8px}
+.tippbox ol,.tippbox ul{margin:.3em 0;padding-left:1.3em}
+.solbox{margin-top:12px;background:#f3f0ff;border:1px solid #d0bfff;border-radius:12px;padding:10px 14px}
+.solbox .eq{margin:6px 0}
+.center{text-align:center}
+.big{font-size:3rem;letter-spacing:6px;color:#f59f00;margin:6px 0}
+.res li{margin:4px 0}
+.modal{position:fixed;inset:0;background:rgba(20,25,50,.55);display:flex;align-items:flex-start;justify-content:center;padding:20px;z-index:20;overflow:auto}
+.modal[hidden]{display:none}
+.sheet{background:#fff;border-radius:18px;max-width:760px;width:100%;padding:20px 24px;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.sheet h2{margin-top:0}.sheet h3{margin:16px 0 4px;color:var(--pri)}
+.sheet table{border-collapse:collapse;margin:6px 0}
+.sheet td,.sheet th{border:1px solid var(--line);padding:4px 10px;text-align:left}
+.sheet .x{position:absolute;top:10px;right:12px;background:#eef2ff;border:none;border-radius:50%;width:34px;height:34px;font-size:1.1rem}
+@media (max-width:560px){body{font-size:16px}.eq{font-size:1.3rem}.card{padding:14px}}
+.pop{animation:pop .35s ease}
+@keyframes pop{0%{transform:scale(.96);opacity:.4}100%{transform:scale(1);opacity:1}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand" id="brand" role="button" tabindex="0">🧪 SalzCheck</div>
+  <div class="top-right">
+    <span class="xp" id="xpbox"></span>
+    <button class="ghost" id="btnHelp" type="button">📋 Spickzettel</button>
+  </div>
+</header>
+<main id="app"></main>
+
+<div class="modal" id="modal" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-label="Spickzettel">
+    <button class="x" id="closeM" type="button" aria-label="Schließen">✕</button>
+    <h2>📋 Spickzettel</h2>
+    <h3>1 · Ionen</h3>
+    <p>Metallatome <b>geben</b> Elektronen ab → <b>Kationen (+)</b>. Nichtmetallatome <b>nehmen</b> Elektronen auf → <b>Anionen (−)</b>.</p>
+    <ul>
+      <li><b>Hauptgruppenmetalle:</b> Ladung = Hauptgruppennummer (1. HG: 1+, 2. HG: 2+, Aluminium: 3+)</li>
+      <li><b>Nichtmetalle:</b> Ladung = −(8 − Hauptgruppennummer) → 7. HG: 1−, 6. HG: 2−, 5. HG: 3−</li>
+      <li><b>Nebengruppenmetalle:</b> die <b>römische Ziffer</b> ist die Ladung: Eisen(III) → Fe³⁺, Kupfer(I) → Cu⁺</li>
+    </ul>
+    <table>
+      <tr><th>Name</th><th>Ion</th><th>Name</th><th>Ion</th></tr>
+      <tr><td>Fluorid</td><td>F⁻</td><td>Oxid</td><td>O²⁻</td></tr>
+      <tr><td>Chlorid</td><td>Cl⁻</td><td>Sulfid</td><td>S²⁻</td></tr>
+      <tr><td>Bromid</td><td>Br⁻</td><td>Nitrid</td><td>N³⁻</td></tr>
+      <tr><td>Iodid</td><td>I⁻</td><td></td><td></td></tr>
+    </table>
+    <h3>2 · Verhältnisformel</h3>
+    <ol>
+      <li>Ionen mit Ladung aufschreiben (z. B. Al³⁺ und O²⁻)</li>
+      <li>Ladungen ausgleichen: kleinstes gemeinsames Vielfaches (6) → 2 × Al³⁺ und 3 × O²⁻</li>
+      <li>Metall zuerst, Index 1 wird nicht geschrieben → <b>Al₂O₃</b></li>
+    </ol>
+    <h3>3 · Formeln der Elemente</h3>
+    <p>Metalle: einzelne Atome (Na, Fe, Cu …). Zweiatomige Moleküle: <b>H₂ N₂ O₂ F₂ Cl₂ Br₂ I₂</b>. Schwefel schreiben wir hier vereinfacht als <b>S</b>.</p>
+    <h3>4 · Reaktionsgleichung</h3>
+    <ol>
+      <li>Edukte (links) und Produkte (rechts) bestimmen – <b>Salzbildung:</b> Metall + Nichtmetall → Salz · <b>Elektrolyse:</b> Salz → Metall + Nichtmetall</li>
+      <li>Formeln aufstellen</li>
+      <li>Koeffizienten (Zahlen <i>vor</i> den Formeln) so wählen, dass links und rechts gleich viele Atome stehen. <b>Nie die tiefgestellten Zahlen ändern!</b> Kleinste ganze Zahlen verwenden.</li>
+    </ol>
+    <p><b>Elektrolyse:</b> Das Salz liegt in Wasser gelöst vor (in Gleichungen: (aq)). Das Zustandssymbol musst du in dieser App nicht schreiben.</p>
+    <h3>Eingabe-Hilfe</h3>
+    <p>Zahlen direkt hinter einem Buchstaben werden automatisch <b>tiefgestellt</b> (bei Ionen <b>hochgestellt</b>). Du kannst auch die Tasten unter dem Eingabefeld benutzen. Mit <b>-&gt;</b> entsteht der Reaktionspfeil →.</p>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* =====================  DATEN  ===================== */
+const CATIONS=[
+ {sym:'Li',el:'Lithium',c:1,g:1},{sym:'Na',el:'Natrium',c:1,g:1},{sym:'K',el:'Kalium',c:1,g:1},
+ {sym:'Mg',el:'Magnesium',c:2,g:2},{sym:'Ca',el:'Calcium',c:2,g:2},{sym:'Ba',el:'Barium',c:2,g:2},
+ {sym:'Al',el:'Aluminium',c:3,g:3},
+ {sym:'Fe',el:'Eisen',c:2,tm:1},{sym:'Fe',el:'Eisen',c:3,tm:1},
+ {sym:'Cu',el:'Kupfer',c:1,tm:1},{sym:'Cu',el:'Kupfer',c:2,tm:1},
+ {sym:'Zn',el:'Zink',c:2,tm:1},{sym:'Ag',el:'Silber',c:1,tm:1},
+ {sym:'Ni',el:'Nickel',c:2,tm:1},{sym:'Cr',el:'Chrom',c:3,tm:1},{sym:'Mn',el:'Mangan',c:2,tm:1}
+];
+const ANIONS=[
+ {sym:'F',el:'Fluor',mol:'F2',m:2,c:1,an:'Fluorid',g:7},
+ {sym:'Cl',el:'Chlor',mol:'Cl2',m:2,c:1,an:'Chlorid',g:7},
+ {sym:'Br',el:'Brom',mol:'Br2',m:2,c:1,an:'Bromid',g:7},
+ {sym:'I',el:'Iod',mol:'I2',m:2,c:1,an:'Iodid',g:7},
+ {sym:'O',el:'Sauerstoff',mol:'O2',m:2,c:2,an:'Oxid',g:6},
+ {sym:'S',el:'Schwefel',mol:'S',m:1,c:2,an:'Sulfid',g:6},
+ {sym:'N',el:'Stickstoff',mol:'N2',m:2,c:3,an:'Nitrid',g:5}
+];
+const ROMAN={1:'I',2:'II',3:'III',4:'IV'};
+const SUBS='₀₁₂₃₄₅₆₇₈₉', SUPS='⁰¹²³⁴⁵⁶⁷⁸⁹';
+
+/* =====================  HELFER  ===================== */
+let app=null;
+const $=(s,r=document)=>r.querySelector(s);
+const gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
+const lcm=(a,b)=>a/gcd(a,b)*b;
+const rnd=n=>Math.floor(Math.random()*n);
+const pick=a=>a[rnd(a.length)];
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+const isLetter=c=>!!c&&/[A-Za-zÄÖÜäöüß]/.test(c);
+const isSub=c=>!!c&&SUBS.includes(c);
+const isSup=c=>!!c&&SUPS.includes(c);
+const fmt=f=>String(f).replace(/(\d+)/g,'<sub>$1</sub>');
+const ionHTML=(sym,c,sign)=>`${sym}<sup>${c>1?c:''}${sign==='+'?'+':'−'}</sup>`;
+const ionStr=I=>I.sym+(I.c>1?I.c:'')+I.sign;
+function normChem(s){
+  return String(s==null?'':s)
+    .replace(/[₀-₉]/g,c=>String(SUBS.indexOf(c)))
+    .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]/g,c=>String(SUPS.indexOf(c)))
+    .replace(/⁺/g,'+').replace(/[⁻−–—]/g,'-')
+    .replace(/\s+/g,'');
+}
+function parseF(f){
+  if(!/^([A-Z][a-z]?\d*)+$/.test(f))return null;
+  const o={};
+  f.replace(/([A-Z][a-z]?)(\d*)/g,(m,e,n)=>{o[e]=(o[e]||0)+(n?+n:1);return m;});
+  return o;
+}
+const stripStates=s=>s.replace(/\((s|l|g)\)/g,'');
+function bilanz(L,R){
+  const cnt=side=>{const o={};side.forEach(t=>{const p=parseF(t.f)||{};for(const e in p)o[e]=(o[e]||0)+p[e]*t.k;});return o;};
+  const l=cnt(L),r=cnt(R);
+  return [...new Set([...Object.keys(l),...Object.keys(r)])].map(e=>({el:e,l:l[e]||0,r:r[e]||0}));
+}
+function bilHTML(rows){
+  return '<div class="bil">'+rows.map(r=>`<span class="b ${r.l===r.r?'ok':'no'}">${r.el}: links ${r.l} | rechts ${r.r} ${r.l===r.r?'✓':'✗'}</span>`).join('')+'</div>';
+}
+
+/* =====================  SALZE & REAKTIONEN  ===================== */
+function makeSalt(cat,an){
+  const l=lcm(cat.c,an.c),x=l/cat.c,y=l/an.c;
+  const f=cat.sym+(x>1?x:'')+an.sym+(y>1?y:'');
+  const name=cat.tm?`${cat.el}(${ROMAN[cat.c]})-${an.an.toLowerCase()}`:`${cat.el}${an.an.toLowerCase()}`;
+  return {cat,an,x,y,f,name};
+}
+function buildReaction(type,cat,an){
+  const salt=makeSalt(cat,an);
+  const m=an.m,r=m/gcd(m,salt.y),p=r*salt.x,q=r*salt.y/m;
+  const metal={kind:'metal',f:cat.sym,name:cat.el,sym:cat.sym,k:p,cat};
+  const nonm={kind:'nonmetal',f:an.mol,name:an.el,sym:an.sym,k:q,an};
+  const s={kind:'salt',f:salt.f,name:salt.name,k:r,cat,an,salt,aq:false,dissolved:type==='elektro'};
+  return type==='bildung'?{type,salt,cat,an,left:[metal,nonm],right:[s]}:{type,salt,cat,an,left:[s],right:[metal,nonm]};
+}
+const saltDesc=s=>({kind:'salt',f:s.f,name:s.name,aq:false,cat:s.cat,an:s.an,salt:s});
+const AQNOTE='<p class="small">Hinweis: Bei der Elektrolyse liegt das Salz in Wasser gelöst vor, in Gleichungen kennzeichnet man das mit <b>(aq)</b>. Das musst du hier <b>nicht</b> schreiben.</p>';
+const nm=t=>t.kind==='salt'&&t.dissolved?`${t.name}-Lösung`:t.name;
+const termHTML=t=>(t.k>1?`<span class="coef">${t.k}</span>`:'')+fmt(t.f)+(t.aq?'<span class="st">(aq)</span>':'');
+function eqLine(reac,fn){
+  const L=reac.left.map((t,i)=>fn(t,'L',i)).join('<span class="plus">+</span>');
+  const R=reac.right.map((t,i)=>fn(t,'R',i)).join('<span class="plus">+</span>');
+  const lab=reac.type==='elektro'?'<small>Elektrolyse</small>':'';
+  return `<div class="eq">${L}<span class="arrow">${lab}→</span>${R}</div>`;
+}
+const solEq=reac=>eqLine(reac,t=>`<span class="term">${termHTML(t)}</span>`);
+function wordEq(reac,hide){
+  const L=hide==='L'?'<span class="qmark">?</span>':reac.left.map(nm).join(' + ');
+  const R=hide==='R'?'<span class="qmark">?</span>':reac.right.map(nm).join(' + ');
+  const lab=reac.type==='elektro'?'<small>Elektrolyse</small>':'';
+  return `${L} <span class="arrow2">${lab}→</span> ${R}`;
+}
+const typeChip=reac=>reac.type==='bildung'?'<span class="tag2">Salzbildung</span>':'<span class="tag2 elektro">Salzelektrolyse (Salz gelöst)</span>';
+const eqPlain=reac=>{
+  const side=a=>a.map(t=>(t.k>1?t.k:'')+t.f+(t.aq?'(aq)':'')).join(' + ');
+  return side(reac.left)+' → '+side(reac.right);
+};
+const chargeBil=s=>`${s.x} · (+${s.cat.c}) + ${s.y} · (−${s.an.c}) = 0`;
+
+/* =====================  POOLS & ZIEHEN  ===================== */
+const poolEasy=(c,a)=>!c.tm&&c.c<=2&&a.c<=2;
+const poolHard=(c,a)=>!!c.tm||c.c===3||a.c===3;
+const poolAll=()=>true;
+const poolHG=(c)=>!c.tm;
+const poolTM=(c)=>!!c.tm;
+const elCat=c=>c.sym!=='Ag'&&!(c.sym==='Cu'&&c.c===1);
+const poolElektro=(c,a)=>elCat(c)&&['Cl','Br','I'].includes(a.sym);
+const poolElektroEasy=(c,a)=>poolElektro(c,a)&&!c.tm&&c.c<=2;
+function drawCombo(filter,ctx){
+  const all=[];
+  CATIONS.forEach(c=>ANIONS.forEach(a=>{if(filter(c,a))all.push([c,a]);}));
+  let cand=all.filter(([c,a])=>!ctx.used.has(c.sym+c.c+a.sym));
+  if(!cand.length)cand=all;
+  const c2=cand.filter(([c])=>!ctx.usedC.has(c.sym+c.c));
+  if(c2.length)cand=c2;
+  const [c,a]=pick(cand);
+  ctx.used.add(c.sym+c.c+a.sym);ctx.usedC.add(c.sym+c.c);
+  return [c,a];
+}
+
+/* =====================  FEEDBACK-LOGIK  ===================== */
+function fbIon(stu,I,att){
+  const s=normChem(stu),exp=ionStr(I);
+  if(!s)return{ok:false,neutral:true,msg:'Trage das Ion ein.'};
+  if(s===exp)return{ok:true,msg:'✓ '+ionHTML(I.sym,I.c,I.sign)};
+  const m=s.match(/^([A-Z][a-z]?)(\d*)([+-]?)$/);
+  if(!m)return{ok:false,msg:'Schreibweise: Elementsymbol, dahinter die Ladung <b>hochgestellt</b> – erst die Zahl, dann das Vorzeichen (z. B. Mg²⁺ oder Cl⁻). Nutze die Tasten unter dem Feld.'};
+  const sym=m[1],num=m[2],sg=m[3];
+  if(sym!==I.sym)return{ok:false,msg:`Das Ion hat dasselbe Elementsymbol wie das Atom (${I.el}). Prüfe auch Groß- und Kleinschreibung.`};
+  if(!sg)return{ok:false,msg:'Das <b>Vorzeichen</b> der Ladung fehlt (+ oder −).'};
+  if(sg!==I.sign)return{ok:false,msg:I.sign==='+'
+    ?'Metallatome <b>geben</b> Elektronen ab. Dann überwiegen die positiven Protonen → das Ion ist <b>positiv</b> geladen (Kation).'
+    :'Nichtmetallatome <b>nehmen</b> Elektronen auf. Dann überwiegen die negativen Elektronen → das Ion ist <b>negativ</b> geladen (Anion).'};
+  if(num==='1')return{ok:false,msg:'Bei der Ladung 1 schreibt man die Zahl nicht – nur das Vorzeichen (z. B. Na⁺).'};
+  let hint;
+  if(I.type==='cat')hint=`Metallatome geben so viele Elektronen ab, wie die <b>Hauptgruppennummer</b> angibt (${I.el}: ${I.g}. Hauptgruppe).`;
+  else if(I.type==='an')hint=`Nichtmetallatome nehmen so viele Elektronen auf, bis sie 8 Außenelektronen haben: <b>8 − ${I.g}</b> (${I.el}: ${I.g}. Hauptgruppe).`;
+  else hint=`Bei Nebengruppenmetallen gibt die <b>römische Ziffer</b> in Klammern die Ladung an: (${I.roman}) bedeutet ${I.c}+.`;
+  return{ok:false,msg:'Die Ionenladung stimmt noch nicht. '+hint};
+}
+const catInfo=c=>({sym:c.sym,c:c.c,sign:'+',type:c.tm?'tm':'cat',g:c.g,el:c.el,roman:ROMAN[c.c]});
+const anInfo=a=>({sym:a.sym,c:a.c,sign:'-',type:'an',g:a.g,el:a.el,an:a.an});
+
+const lbl=t=>t.hide?(t.kind==='salt'?'das Salz':t.kind==='metal'?'das Metall':'das Nichtmetall'):t.name;
+function wrongHint(e,core,att){
+  const pf=parseF(core);
+  const keys=pf?Object.keys(pf):[];
+  if(e.kind==='nonmetal'){
+    const subj=e.hide?'Das Nichtmetall':e.name;
+    if(e.f===e.sym)return`Schwefel schreiben wir hier vereinfacht als einzelnes Atom <b>ohne Index</b> (Symbol mit großem Anfangsbuchstaben).`;
+    if(core===e.sym)return`${subj} kommt nicht als einzelnes Atom vor, sondern als <b>zweiatomiges Molekül</b>. Merke: H₂, N₂, O₂, F₂, Cl₂, Br₂, I₂ – wie schreibt man dann die Formel?`;
+    if(pf&&keys.length===1&&pf[e.sym])return`Das Elementsymbol stimmt ✓, aber ${e.hide?'die Moleküle dieses Nichtmetalls':e.name+'-Moleküle'} bestehen aus genau <b>zwei</b> Atomen.`;
+    return`Prüfe das Symbol von ${e.hide?'dem Nichtmetall':e.name} (Periodensystem, Groß- und Kleinschreibung) und denke an zweiatomige Moleküle.`;
+  }
+  if(e.kind==='metal'){
+    if(pf&&keys.length===1&&pf[e.sym])return`Metalle schreibt man als einzelne Atome – <b>ohne</b> Index (z. B. Na, nicht Na₂).`;
+    return`Prüfe das Elementsymbol von ${e.hide?'dem Metall':e.name} (Periodensystem, Groß- und Kleinschreibung).`;
+  }
+  const cat=e.cat,an=e.an,s=e.salt;
+  const thr=e.free?3:2;
+  const ions=`${ionHTML(cat.sym,cat.c,'+')} und ${ionHTML(an.sym,an.c,'-')}`;
+  if(!pf)return`Das ist keine gültige Formel – Elementsymbole beginnen mit einem Großbuchstaben, Indizes werden tiefgestellt.`;
+  const both=pf[cat.sym]!==undefined&&pf[an.sym]!==undefined&&keys.length===2;
+  if(both){
+    const order=core.match(/[A-Z][a-z]?/g)||[];
+    if(order[0]!==cat.sym)return`Die Elemente stimmen ✓. In einer Verhältnisformel steht aber das <b>Metall (Kation) zuerst</b>, dann das Nichtmetall (Anion).`;
+    const base='Die Elemente stimmen ✓, aber das Zahlenverhältnis noch nicht. Das Salz muss nach außen <b>elektrisch neutral</b> sein. ';
+    if(att>=thr+1)return base+`Es besteht aus ${ions}. Ladungsausgleich: ${s.x} × ${ionHTML(cat.sym,cat.c,'+')} (${s.x*cat.c}+) und ${s.y} × ${ionHTML(an.sym,an.c,'-')} (${s.y*an.c}−). Wie lautet daraus die Formel?`;
+    if(att>=thr)return base+`Es besteht aus ${ions}. Wie viele Ionen jeder Sorte brauchst du, damit sich die Ladungen aufheben?`;
+    return base+'Überlege dir die beiden Ionen mit ihren Ladungen und wie viele davon sich ausgleichen.';
+  }
+  return`Prüfe die Elemente im Salz: ${e.hide?'Das Salz':e.name} besteht aus einem <b>Metall</b> und einem <b>Nichtmetall</b>`+(e.hide?' (beide Elemente stehen in der Aufgabe).':' (Endung „-id“ beim Nichtmetall).')+(att>=thr?` Die Symbole sind ${cat.sym} und ${an.sym}.`:'');
+}
+function fbFormula(stu,e,att){
+  const s=stripStates(normChem(stu));
+  if(!s)return{ok:false,neutral:true,msg:'Trage die Formel ein.'};
+  const aq=/\(aq\)$/.test(s),core=s.replace(/\(aq\)/,'');
+  if(core===e.f){
+    return{ok:true,msg:'✓ '+fmt(e.f)};
+  }
+  return{ok:false,msg:wrongHint(e,core,att)};
+}
+function followUp(fStu,kStr,aStr){
+  const k=normChem(kStr).match(/^([A-Z][a-z]?)(\d*)\+$/),a=normChem(aStr).match(/^([A-Z][a-z]?)(\d*)-$/);
+  if(!k||!a)return false;
+  const kc=+(k[2]||1),ac=+(a[2]||1),l=lcm(kc,ac);
+  const f=k[1]+(l/kc>1?l/kc:'')+a[1]+(l/ac>1?l/ac:'');
+  return normChem(fStu).replace(/\(.*\)/,'')===f;
+}
+
+/* ---- Gleichung parsen & bewerten ---- */
+function parseTerm(t){
+  t=stripStates(t);
+  if(!t)return null;
+  const m=t.match(/^(\d*)([A-Z].*)$/);
+  if(!m)return{bad:t};
+  let rest=m[2],aq=false;
+  if(/\(aq\)$/.test(rest)){aq=true;rest=rest.replace(/\(aq\)$/,'');}
+  if(!parseF(rest))return{bad:m[2]};
+  return{k:m[1]?+m[1]:1,f:rest,aq};
+}
+function parseEq(str){
+  let s=normChem(str).replace(/-+>|=+>|⟶|⇒|=/g,'→');
+  if(!s)return{err:true,neutral:true,msg:'Schreibe die Gleichung in das Feld.'};
+  const parts=s.split('→');
+  if(parts.length<2)return{err:true,msg:'Es fehlt der <b>Reaktionspfeil →</b>. Links stehen die Edukte, rechts die Produkte.'};
+  if(parts.length>2)return{err:true,msg:'Es darf nur <b>ein</b> Reaktionspfeil vorkommen.'};
+  const sides=[];
+  for(const p of parts){
+    if(!p)return{err:true,msg:'Auf einer Seite des Pfeils steht noch kein Stoff.'};
+    const terms=p.split('+').map(parseTerm);
+    if(terms.some(t=>t===null))return{err:true,msg:'Zwischen zwei „+“ fehlt ein Stoff (oder ein „+“ ist zu viel).'};
+    const bad=terms.find(t=>t.bad);
+    if(bad)return{err:true,msg:`„${bad.bad}“ ist keine gültige Formel – jedes Elementsymbol beginnt mit einem Großbuchstaben (z. B. Cl, nicht CL).`};
+    const merged=[];
+    terms.forEach(t=>{const x=merged.find(m=>m.f===t.f);if(x){x.k+=t.k;x.aq=x.aq||t.aq;}else merged.push({...t});});
+    sides.push(merged);
+  }
+  return{left:sides[0],right:sides[1]};
+}
+function shares(f1,f2){const a=parseF(f1),b=parseF(f2);if(!a||!b)return false;return Object.keys(a).some(e=>b[e]!==undefined);}
+function evalEq(str,reac,att){
+  const P=parseEq(str);
+  if(P.err)return{ok:false,neutral:P.neutral,msg:P.msg};
+  const eqSet=(A,B)=>A.length===B.length&&A.every(a=>B.some(b=>b.f===a.f));
+  if(!eqSet(P.left,reac.left)&&eqSet(P.left,reac.right)&&eqSet(P.right,reac.left))
+    return{ok:false,msg:'Du hast <b>Edukte und Produkte vertauscht</b>: Links stehen die Stoffe, die reagieren (Edukte), rechts die Stoffe, die entstehen (Produkte).'};
+  const msgs=[];
+  [['left','links (Edukte)'],['right','rechts (Produkte)']].forEach(([side,label])=>{
+    const stu=P[side],exp=reac[side];
+    const unE=exp.filter(e=>!stu.some(s=>s.f===e.f));
+    const unS=stu.filter(s=>!exp.some(e=>e.f===s.f));
+    const used=new Set();
+    unE.forEach(e=>{
+      let cand=unS.find(s=>!used.has(s)&&shares(s.f,e.f))||unS.find(s=>!used.has(s));
+      if(cand){used.add(cand);msgs.push(`<b>${lbl(e)}</b> (${label}): ${wrongHint(e,cand.f,att)}`);}
+      else msgs.push(`Auf der Seite ${label} fehlt noch ein Stoff: <b>${lbl(e)}</b>. Wie lautet seine Formel?`);
+    });
+    unS.filter(s=>!used.has(s)).forEach(s=>msgs.push(`Auf der Seite ${label} steht ein Stoff, der hier nicht hingehört: ${fmt(s.f)}.`));
+  });
+  if(msgs.length)return{ok:false,msg:'<p><b>Prüfe zuerst die Formeln:</b></p><ul>'+msgs.map(m=>`<li>${m}</li>`).join('')+'</ul>'};
+  const kOf=(side,e)=>P[side].find(s=>s.f===e.f).k;
+  const all=['left','right'].every(sd=>reac[sd].every(e=>kOf(sd,e)===e.k));
+  if(all)return{ok:true,msg:'<b>Die Gleichung stimmt!</b>'+solEq(reac)};
+  const Lt=reac.left.map(e=>({f:e.f,k:kOf('left',e)})),Rt=reac.right.map(e=>({f:e.f,k:kOf('right',e)}));
+  const rows=bilanz(Lt,Rt);
+  const ks=[...Lt,...Rt].map(t=>t.k);
+  if(rows.every(r=>r.l===r.r)){
+    return{ok:false,msg:`<p>Alle Formeln stimmen ✓ und die Atombilanz passt ✓ – aber verwende die <b>kleinsten ganzen Zahlen</b>: Teile alle Koeffizienten durch ${ks.reduce(gcd)}.</p>`+bilHTML(rows)};
+  }
+  const bad=rows.find(r=>r.l!==r.r);
+  return{ok:false,msg:`<p>Alle Formeln stimmen ✓. Jetzt müssen noch die <b>Koeffizienten</b> passen – die Atome sind links und rechts nicht gleich verteilt:</p>`+bilHTML(rows)+
+    (att>=2?`<p>Starte bei <b>${bad.el}</b> (links ${bad.l}, rechts ${bad.r}) und überlege, welchen Koeffizienten du ändern musst.</p>`:'')+
+    `<p class="note">Nur die Zahlen <b>vor</b> den Formeln verändern – die tiefgestellten Zahlen in den Formeln bleiben!</p>`};
+}
+function evalGap(str,reac,idx,att){
+  const terms=[...reac.left,...reac.right],e=terms[idx];
+  const s=normChem(str);
+  if(!s)return{ok:false,neutral:true,msg:'Trage den fehlenden Stoff (mit Koeffizient) ein.'};
+  if(/[→+=]/.test(s)||s.includes('->'))return{ok:false,msg:'Trage nur den <b>einen fehlenden Stoff</b> mit seinem Koeffizienten ein – ohne „+“ und Pfeil.'};
+  const t=parseTerm(s);
+  if(!t||t.bad)return{ok:false,msg:'Das ist keine gültige Schreibweise: erst der Koeffizient (Zahl), dann die Formel, z. B. 2NaCl.'};
+  if(t.f!==e.f)return{ok:false,msg:wrongHint(e,t.f,att)};
+  if(t.k===e.k)return{ok:true,msg:'✓ '+termHTML(e)};
+  const nl=reac.left.length;
+  const ks=terms.map((x,i)=>i===idx?t.k:x.k);
+  const rows=bilanz(reac.left.map((x,i)=>({f:x.f,k:ks[i]})),reac.right.map((x,i)=>({f:x.f,k:ks[nl+i]})));
+  return{ok:false,msg:`Die Formel stimmt ✓, aber der <b>Koeffizient</b> passt nicht. Mit deiner Zahl ergibt sich diese Atombilanz:`+bilHTML(rows)+
+    `<p class="note">Die anderen Koeffizienten in der Gleichung sind richtig. Welche Zahl macht die Bilanz stimmig?</p>`};
+}
+function evalBalance(reac,ks,att){
+  const nl=reac.left.length;
+  const rows=bilanz(reac.left.map((t,i)=>({f:t.f,k:ks[i]})),reac.right.map((t,i)=>({f:t.f,k:ks[nl+i]})));
+  const bal=rows.every(r=>r.l===r.r);
+  const exp=[...reac.left,...reac.right].map(t=>t.k);
+  if(ks.every((k,i)=>k===exp[i]))return{ok:true,msg:'<b>Die Atombilanz stimmt:</b>'+bilHTML(rows)};
+  if(bal)return{ok:false,msg:`<p>Die Atombilanz stimmt ✓ – es geht aber mit <b>kleineren</b> Zahlen: Teile alle Koeffizienten durch ${ks.reduce(gcd)}. Gesucht sind immer die <b>kleinsten ganzen</b> Zahlen.</p>`+bilHTML(rows)};
+  const bad=rows.find(r=>r.l!==r.r);
+  let msg='<p>Die Atome sind links und rechts noch nicht gleich verteilt:</p>'+bilHTML(rows);
+  if(att>=2){
+    const withEl=[...reac.left,...reac.right].filter(t=>(parseF(t.f)||{})[bad.el]).map(t=>fmt(t.f));
+    msg+=`<p>Starte bei <b>${bad.el}</b> (links ${bad.l}, rechts ${bad.r}). ${bad.el} steckt in: ${withEl.join(', ')}. Welchen Koeffizienten musst du ändern?</p>`;
+  }
+  msg+='<p class="note">Du darfst nur die Zahlen <b>vor</b> den Formeln ändern – die tiefgestellten Zahlen (Indizes) bleiben unverändert!</p>';
+  return{ok:false,msg};
+}
+
+/* =====================  AUFGABEN-GENERATOREN  ===================== */
+const GEN={1:{},2:{},3:{}};
+
+/* ---- Mission 1 ---- */
+GEN[1][1]=ctx=>{
+  if(!ctx.seq)ctx.seq=shuffle(['cat','an','cat','an','tm','tm']);
+  const t=ctx.seq[ctx.i];
+  const pool=t==='cat'?CATIONS.filter(c=>!c.tm):t==='an'?ANIONS:CATIONS.filter(c=>c.tm);
+  let cand=pool.filter(o=>!ctx.used.has(t+o.sym+o.c));if(!cand.length)cand=pool;
+  const o=pick(cand);ctx.used.add(t+o.sym+o.c);
+  let info,prompt,tipp;
+  if(t==='cat'){
+    info=catInfo(o);
+    prompt=`<p><b>${o.el}</b> steht in der <b>${o.g}. Hauptgruppe</b>. Bei der Salzbildung <b>gibt</b> ein ${o.el}-Atom Elektronen <b>ab</b> und wird zum <b>${o.el}-Ion</b>.</p><p>Schreibe das Ion mit seiner Ladung.</p>`;
+    tipp='Metalle geben so viele Elektronen ab, wie ihre Hauptgruppennummer angibt. Die Ladung des Ions ist positiv.';
+  }else if(t==='an'){
+    info=anInfo(o);
+    prompt=`<p><b>${o.el}</b> steht in der <b>${o.g}. Hauptgruppe</b>. Bei der Salzbildung <b>nimmt</b> ein ${o.el}-Atom Elektronen <b>auf</b> und wird zum <b>${o.an}-Ion</b>.</p><p>Schreibe das Ion mit seiner Ladung.</p>`;
+    tipp='Nichtmetallatome füllen ihre Außenschale auf 8 Elektronen auf: Es werden 8 − Hauptgruppennummer Elektronen aufgenommen. Die Ladung ist negativ.';
+  }else{
+    info=catInfo(o);
+    prompt=`<p>Das <b>${o.el}(${ROMAN[o.c]})-Ion</b> – schreibe die Formel dieses Ions mit seiner Ladung.</p>`;
+    tipp='Bei Nebengruppenmetallen gibt die römische Ziffer in Klammern direkt die Ladung an.';
+  }
+  return{
+    title:'Ion bilden',prompt,
+    fields:[{id:'ion',kind:'chem',mode:'ion',label:'Ion mit Ladung:',ph:'z. B. Mg²⁺'}],
+    tipps:[tipp],
+    check:(v,att)=>({ion:fbIon(v.ion,info,att)}),
+    answer:{ion:ionStr(info)},
+    solution:`<b>${ionHTML(info.sym,info.c,info.sign)}</b>`,
+    explain:t==='cat'?`Merke: ${o.el}-Atome geben ${o.c} Elektron${o.c>1?'en':''} ab → ${ionHTML(o.sym,o.c,'+')}.`
+           :t==='an'?`Merke: ${o.el}-Atome nehmen ${o.c} Elektron${o.c>1?'en':''} auf → ${o.an}-Ion ${ionHTML(o.sym,o.c,'-')}.`
+           :`Merke: Die römische Ziffer ist die Ionenladung → ${ionHTML(o.sym,o.c,'+')}.`
+  };
+};
+function mixPool(ctx,spec){
+  if(!ctx.seq)ctx.seq=shuffle(spec);
+  return ctx.seq[ctx.i]==='tm'?poolTM:poolHG;
+}
+GEN[1][2]=ctx=>{
+  const [c,a]=drawCombo(mixPool(ctx,['hg','hg','hg','hg','tm','tm']),ctx);
+  const s=makeSalt(c,a),e=saltDesc(s);
+  return{
+    title:'Formel aus Ionen',
+    prompt:`<p>Ein Salz (<b>${s.name}</b>) besteht aus den Ionen <span class="ion">${ionHTML(c.sym,c.c,'+')}</span> und <span class="ion">${ionHTML(a.sym,a.c,'-')}</span>.</p><p>Stelle die <b>Verhältnisformel</b> des Salzes auf.</p>`,
+    fields:[{id:'f',kind:'chem',mode:'formula',label:'Verhältnisformel:',ph:'z. B. MgCl₂'}],
+    tipps:['Das Salz ist nach außen <b>elektrisch neutral</b>: Die Summe der positiven Ladungen muss so groß sein wie die Summe der negativen. Suche das kleinste gemeinsame Vielfache der Ladungen.',
+           `Ladungsausgleich: ${s.x} × ${ionHTML(c.sym,c.c,'+')} (${s.x*c.c}+) und ${s.y} × ${ionHTML(a.sym,a.c,'-')} (${s.y*a.c}−).`],
+    check:(v,att)=>({f:fbFormula(v.f,e,att)}),
+    answer:{f:s.f},
+    solution:`<b>${fmt(s.f)}</b> – Ladungsbilanz: ${chargeBil(s)}`,
+    explain:`Ladungsbilanz: ${chargeBil(s)} → Verhältnis ${s.x} : ${s.y} → <b>${fmt(s.f)}</b>. (Index 1 wird nicht geschrieben.)`
+  };
+};
+function tNameToFormula(c,a,free){
+  const s=makeSalt(c,a),e=saltDesc(s),ci=catInfo(c),ai=anInfo(a);
+  e.free=!!free;
+  const ionTipp='Name = Metall + Nichtmetall mit Endung „-id“. Kation: Hauptgruppennummer bzw. römische Ziffer = Ladung. Anion: Ladung = −(8 − Hauptgruppennummer).';
+  const ionsTxt=`Ionen: ${ionHTML(c.sym,c.c,'+')} und ${ionHTML(a.sym,a.c,'-')}.`;
+  const lad=`Ladungsausgleich: ${s.x} × (${s.x*c.c}+) und ${s.y} × (${s.y*a.c}−).`;
+  const common={
+    answer:null,
+    solution:`${ionHTML(c.sym,c.c,'+')} und ${ionHTML(a.sym,a.c,'-')} → <b>${fmt(s.f)}</b> (${chargeBil(s)})`,
+    explain:`${ionHTML(c.sym,c.c,'+')} + ${ionHTML(a.sym,a.c,'-')}: ${chargeBil(s)} → <b>${fmt(s.f)}</b>.`
+  };
+  if(free)return{
+    title:'Formel aus Namen (frei)',
+    prompt:`<p>Stelle die <b>Verhältnisformel</b> des Salzes <b>${s.name}</b> auf.</p><p class="small">Die Zwischenschritte (Ionen, Ladungsausgleich) machst du selbst – z. B. auf Papier.</p>`,
+    fields:[{id:'f',kind:'chem',mode:'formula',label:'Verhältnisformel:',ph:'z. B. FeCl₃'}],
+    tipps:[ionTipp,ionsTxt,lad],
+    check:(v,att)=>({f:fbFormula(v.f,e,att)}),
+    answer:{f:s.f},solution:common.solution,explain:common.explain
+  };
+  return{
+    title:'Formel aus Namen (mit Ionen)',
+    prompt:`<p>Das Salz <b>${s.name}</b> besteht aus Ionen. Gehe in drei Schritten vor:</p><ol><li>Formuliere das <b>Kation</b> mit Ladung.</li><li>Formuliere das <b>Anion</b> mit Ladung.</li><li>Stelle die <b>Verhältnisformel</b> auf.</li></ol>`,
+    fields:[
+      {id:'kat',kind:'chem',mode:'ion',label:'① Kation (positives Ion):',ph:'z. B. Na⁺'},
+      {id:'an',kind:'chem',mode:'ion',label:'② Anion (negatives Ion):',ph:'z. B. Cl⁻'},
+      {id:'f',kind:'chem',mode:'formula',label:'③ Verhältnisformel:',ph:'z. B. NaCl'}],
+    tipps:[ionTipp,ionsTxt+' '+lad],
+    check:(v,att)=>{
+      const k=fbIon(v.kat,ci,att),an=fbIon(v.an,ai,att);
+      let f=fbFormula(v.f,e,att);
+      if(!f.ok&&!f.neutral&&(!k.ok||!an.ok)){
+        f=followUp(v.f,v.kat,v.an)
+          ?{ok:false,msg:'Deine Formel passt zu <b>deinen</b> Ionen – aber die Ionen selbst stimmen noch nicht. Korrigiere erst ① und ②.'}
+          :{ok:false,msg:'Die Formel ergibt sich aus den Ladungen der beiden Ionen. Löse also zuerst ① und ②, dann kommst du hier weiter.'};
+      }
+      return{kat:k,an,f};
+    },
+    answer:{kat:ionStr(ci),an:ionStr(ai),f:s.f},solution:common.solution,explain:common.explain
+  };
+}
+GEN[1][3]=ctx=>{const [c,a]=drawCombo(mixPool(ctx,['hg','hg','hg','hg','tm','tm']),ctx);return tNameToFormula(c,a,false);};
+GEN[1][4]=ctx=>{const [c,a]=drawCombo(mixPool(ctx,['hg','hg','hg','tm','tm','tm']),ctx);return tNameToFormula(c,a,true);};
+
+/* ---- Mission 2 ---- */
+function tBalance(reac,pre){
+  const terms=[...reac.left,...reac.right];
+  const si=terms.findIndex(t=>t.kind==='salt');
+  const s=reac.salt;
+  const exp=terms.map(t=>t.k);
+  return{
+    title:'Koeffizienten wählen',
+    prompt:`${typeChip(reac)}<p>Gleiche die Reaktionsgleichung aus: Wähle vor jeder Formel den passenden <b>Koeffizienten</b>.${pre?' Beim Salz ist er schon vorgegeben.':''}</p>{{bal}}<div class="word">${wordEq(reac)}</div>${reac.type==='elektro'?AQNOTE:''}`,
+    fields:[{id:'bal',kind:'balance',reac,preIdx:pre?si:-1}],
+    tipps:['Zähle die Atome jeder Sorte links und rechts. Verändere nur die Zahlen <b>vor</b> den Formeln – nie die tiefgestellten Zahlen!',
+           `Eine Formeleinheit ${fmt(s.f)} enthält ${s.x} ${s.cat.sym}-Atom${s.x>1?'e':''} und ${s.y} ${s.an.sym}-Atom${s.y>1?'e':''}. Gleiche zuletzt das Element ab, das als Molekül (${fmt(s.an.mol)}) vorliegt.`],
+    check:(v,att)=>{
+      if(v.bal.some(x=>x===''||x==null))return{bal:{ok:false,neutral:true,msg:'Wähle bei <b>jedem</b> Stoff eine Zahl aus – auch die <b>1</b>, wenn kein Koeffizient nötig ist.'}};
+      return{bal:evalBalance(reac,v.bal.map(Number),att)};
+    },
+    answer:{bal:exp},
+    solution:solEq(reac),
+    explain:explainReac(reac)
+  };
+}
+function explainReac(reac){
+  const s=reac.salt;
+  return reac.type==='bildung'
+    ?`Salzbildung: ${s.cat.el}-Atome geben Elektronen ab (→ ${ionHTML(s.cat.sym,s.cat.c,'+')}), ${s.an.el}-Atome nehmen sie auf (→ ${ionHTML(s.an.sym,s.an.c,'-')}). Im Salz gilt das Verhältnis ${s.x} : ${s.y} → ${fmt(s.f)}.`
+    :`Elektrolyse: Durch den Strom werden die Ionen entladen. ${ionHTML(s.cat.sym,s.cat.c,'+')} nimmt Elektronen auf (→ ${s.cat.el}), ${ionHTML(s.an.sym,s.an.c,'-')} gibt Elektronen ab (→ ${s.an.el}${s.an.m===2?'-Moleküle '+fmt(s.an.mol):''}).`;
+}
+/* Stufen nur nach Schwierigkeit des Ausgleichens (größter Koeffizient); Salzbildung und Elektrolyse gemischt */
+let _allR=null;
+function allReacs(){
+  if(_allR)return _allR;
+  _allR=[];
+  ['bildung','elektro'].forEach(t=>CATIONS.forEach(c=>ANIONS.forEach(a=>{
+    if(t==='elektro'&&!poolElektro(c,a))return;
+    const r=buildReaction(t,c,a);
+    const ks=[...r.left,...r.right].map(x=>x.k);
+    if(ks.every(k=>k===1))return;
+    r.maxk=Math.max(...ks);
+    _allR.push(r);
+  })));
+  return _allR;
+}
+const lvPred=[k=>k<=2,k=>k===3,k=>k>=4];
+function genBal(lvl,ctx){
+  const want=ctxTypes(ctx),key=r=>r.type+r.cat.sym+r.cat.c+r.an.sym;
+  const pool=allReacs().filter(r=>lvPred[lvl-1](r.maxk));
+  let c1=pool.filter(r=>r.type===want&&!ctx.used.has(key(r)));
+  if(!c1.length)c1=pool.filter(r=>!ctx.used.has(key(r)));
+  if(!c1.length)c1=pool;
+  const c2=c1.filter(r=>!ctx.usedC.has(r.cat.sym+r.cat.c));
+  const r=pick(c2.length?c2:c1);
+  ctx.used.add(key(r));ctx.usedC.add(r.cat.sym+r.cat.c);
+  return tBalance(r,false);
+}
+GEN[2][1]=ctx=>genBal(1,ctx);GEN[2][2]=ctx=>genBal(2,ctx);GEN[2][3]=ctx=>genBal(3,ctx);
+
+/* ---- Mission 3 ---- */
+function tippsEq(reac,hideAqHint){
+  const subs=[...reac.left,...reac.right];
+  const list=subs.map(t=>`${nm(t)}: <b>${fmt(t.f)}${t.aq?'<span class="st">(aq)</span>':''}</b>`).join(' · ');
+  return[
+    '<b>Vorgehen:</b><ol><li>Edukte (links) und Produkte (rechts) bestimmen. '+(reac.type==='bildung'?'Salzbildung: Metall + Nichtmetall → Salz.':'Elektrolyse: Das Salz wird in Metall und Nichtmetall zerlegt.')+'</li><li>Formeln: Metalle = Atom · Nichtmetalle zweiatomig (Cl₂, Br₂, O₂, N₂ …, Schwefel: S) · Salz = Verhältnisformel aus den Ionen'+''+'</li><li>Koeffizienten so wählen, dass die Atombilanz stimmt.</li></ol>',
+    '<b>Formeln der Stoffe:</b> '+list,
+    `Ionen im Salz: ${ionHTML(reac.cat.sym,reac.cat.c,'+')} und ${ionHTML(reac.an.sym,reac.an.c,'-')} → Verhältnis ${reac.salt.x} : ${reac.salt.y}.`
+  ];
+}
+function tEq(reac,promptBlock,showAqNote){
+  return{
+    title:'Reaktionsgleichung aufstellen',
+    prompt:`${typeChip(reac)}${promptBlock}<p>Stelle die <b>vollständige Reaktionsgleichung</b> auf (Formeln und Koeffizienten).</p>${showAqNote&&reac.type==='elektro'?AQNOTE:''}`,
+    fields:[{id:'eq',kind:'chem',mode:'eq',wide:true,label:'Reaktionsgleichung:',ph:'z. B. 2Na + Cl₂ → 2NaCl'}],
+    tipps:tippsEq(reac),
+    check:(v,att)=>({eq:evalEq(v.eq,reac,att)}),
+    answer:{eq:eqPlain(reac)},
+    solution:solEq(reac),
+    explain:explainReac(reac)
+  };
+}
+function mkReac(type,easyFilter,fullFilter,ctx){
+  const [c,a]=drawCombo(type==='bildung'?easyFilter:fullFilter,ctx);
+  return buildReaction(type,c,a);
+}
+function ctxTypes(ctx){if(!ctx.types)ctx.types=shuffle(['bildung','bildung','bildung','elektro','elektro','elektro']);return ctx.types[ctx.i];}
+GEN[3][1]=ctx=>{
+  const type=ctxTypes(ctx);
+  const reac=ctx.i<2?mkReac(type,poolEasy,poolElektroEasy,ctx):mkReac(type,poolAll,poolElektro,ctx);
+  return tEq(reac,`<div class="word">${wordEq(reac)}</div>`,true);
+};
+function sentFull(reac){
+  const s=reac.salt,M=s.cat.el,X=s.an.el,S=s.name;
+  if(reac.type==='bildung')return pick([
+    `${M} reagiert mit ${X} zu ${S}.`,
+    `Aus den Elementen ${M} und ${X} entsteht ${S}.`,
+    `${S} wird durch die Reaktion von ${M} mit ${X} gebildet.`]);
+  return pick([
+    `${S} wird in einer Elektrolysereaktion in elementares ${M} und elementares ${X} zerlegt.`,
+    `Eine ${S}-Lösung wird elektrolysiert. Es entstehen elementares ${M} und elementares ${X}.`,
+    `Bei der Elektrolyse von gelöstem ${S} scheiden sich ${M} und ${X} ab.`]);
+}
+GEN[3][2]=ctx=>{
+  const type=ctxTypes(ctx);
+  const reac=mkReac(type,poolAll,poolElektro,ctx);
+  const T=tEq(reac,`<div class="textq">${sentFull(reac)}</div>`,true);
+  T.title='Reaktionsgleichung aus Text (alle Stoffe genannt)';
+  return T;
+};
+GEN[3][3]=ctx=>{
+  if(!ctx.sides)ctx.sides=shuffle(['A','B','A','B','A','B']);
+  const type=ctxTypes(ctx),side=ctx.sides[ctx.i];
+  const reac=mkReac(type,poolAll,poolElektro,ctx);
+  const s=reac.salt,M=s.cat.el,X=s.an.el,S=s.name;
+  let txt,hid;
+  if(type==='bildung'){
+    if(side==='A'){txt=pick([`${X} reagiert mit ${M}.`,`${M} reagiert mit ${X}.`,`${M} und ${X} reagieren zu einem Salz.`]);hid=reac.right;}
+    else{txt=pick([`${S} wird aus seinen Elementen gebildet.`,`${S} entsteht aus den Elementen, aus denen es besteht.`]);hid=reac.left;}
+  }else{
+    if(side==='A'){txt=pick([`${S} wird in einer Elektrolysereaktion in seine Elemente zerlegt.`,`Eine ${S}-Lösung wird elektrolysiert.`]);hid=reac.right;}
+    else{txt=`Bei der Elektrolyse einer Salzlösung entstehen elementares ${M} und elementares ${X}.`;hid=reac.left;}
+  }
+  hid.forEach(t=>t.hide=true);
+  const saltHidden=reac.left.concat(reac.right).some(t=>t.kind==='salt'&&t.hide);
+  const note=saltHidden&&s.cat.tm?`<p class="small">Hinweis: Im Salz liegen <b>${M}(${ROMAN[s.cat.c]})-Ionen</b> vor.</p>`:'';
+  const T=tEq(reac,`<div class="textq">${txt}</div>${note}`,true);
+  T.title='Reaktionsgleichung aus Text (nur Edukte oder Produkte genannt)';
+  return T;
+};
+
+/* =====================  MISSIONEN  ===================== */
+const MISSIONS=[
+ {id:1,icon:'⚛️',title:'Ionen & Verhältnisformeln',desc:'Ionen aufstellen und Formeln von Salzen herleiten. Stufe 1–3 enthalten auch Nebengruppenmetalle, in Stufe 4 mischt sich alles.',lv:['Ionen aufstellen','Formel aus Ionen','Formel aus Namen (mit Ionen)','Formel aus Namen (frei)']},
+ {id:2,icon:'⚖️',title:'Koeffizienten ausgleichen',desc:'Wähle die Koeffizienten bei Salzbildung und Elektrolyse (gemischt). Die Stufen unterscheiden sich nur im Schwierigkeitsgrad: von kleinen Zahlen bis zu Gleichungen wie 4Al + 3O₂ → 2Al₂O₃.',lv:['Leicht','Mittel','Schwer']},
+ {id:3,icon:'📝',title:'Reaktionsgleichung aufstellen',desc:'Formeln und Koeffizienten selbst aufstellen – die Stufen unterscheiden sich darin, wie viel vorgegeben ist.',lv:['Aus Wortgleichung','Aus Text (alle Stoffe genannt)','Aus Text (nur Edukte oder Produkte genannt)']}
+];
+const ROUND=6;
+const RANKS=[[0,'Salzkorn'],[60,'Ionen-Azubi'],[150,'Gleichungs-Geselle'],[300,'Salz-Profi'],[500,'Labor-Legende']];
+const rank=xp=>{let r=RANKS[0][1];RANKS.forEach(([m,n])=>{if(xp>=m)r=n;});return r;};
+
+/* =====================  SPEICHER  ===================== */
+const KEY='salzcheck_v2';
+let S={xp:0,stars:{}};
+try{const t=localStorage.getItem(KEY);if(t)S=Object.assign(S,JSON.parse(t));}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+
+/* =====================  EINGABE (tiefgestellt/hochgestellt)  ===================== */
+function liveConvert(val,caret,mode){
+  let out='',c=caret;
+  for(let i=0;i<val.length;i++){
+    let ch=val[i];const prev=out.slice(-1);
+    if(mode==='ion'){
+      if(ch==='^'){if(i<caret)c--;continue;}
+      if(/[0-9]/.test(ch)&&(isLetter(prev)||isSup(prev)))ch=SUPS[+ch];
+      else if(ch==='+'&&(isLetter(prev)||isSup(prev)))ch='⁺';
+      else if(/[-−–]/.test(ch)&&(isLetter(prev)||isSup(prev)))ch='⁻';
+    }else{
+      if(/[0-9]/.test(ch)&&(isLetter(prev)||isSub(prev)))ch=SUBS[+ch];
+      else if(mode==='eq'&&ch==='>'&&prev==='-'){out=out.slice(0,-1);ch='→';if(i<caret)c--;}
+    }
+    out+=ch;
+  }
+  return{val:out,caret:Math.max(0,c)};
+}
+function toolbar(mode,aq,gap){
+  const sets={ion:['⁺','⁻','²','³','⁴'],formula:['₂','₃','₄','₅','₆','₇'],eq:gap?['₂','₃','₄','₅','₆','₇']:['₂','₃','₄','₅','₆','₇','+','→']};
+  let b=sets[mode].map(x=>`<button type="button" class="key" data-ins="${x}">${x}</button>`).join('');
+  if(aq)b+=`<button type="button" class="key wide" data-ins="(aq)">(aq)</button>`;
+  return`<div class="kbd">${b}</div>`;
+}
+function fieldHTML(f){
+  if(f.kind==='balance')return balanceHTML(f);
+  const w=f.wide?' wide':'';
+  return`<div class="field${f.inline?' inl':''}">${f.label?`<label for="in_${f.id}">${f.label}</label>`:''}<input id="in_${f.id}" class="chem${w}${f.gap?' gap':''}" data-id="${f.id}" data-mode="${f.mode}" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="${f.ph||''}" aria-label="${f.label?f.label.replace(/<[^>]+>/g,''):'Eingabe'}">${toolbar(f.mode,f.aq,f.gap)}</div>`;
+}
+function balanceHTML(f){
+  const reac=f.reac,nl=reac.left.length;
+  return eqLine(reac,(t,side,i)=>{
+    const idx=side==='L'?i:nl+i;
+    const formula=fmt(t.f)+(t.aq?'<span class="st">(aq)</span>':'');
+    const c=idx===f.preIdx
+      ?`<span class="coefpre" data-bi="${idx}" data-v="${t.k}" title="vorgegeben">${t.k}</span>`
+      :`<select class="coefsel" data-bi="${idx}" aria-label="Koeffizient vor ${t.name}"><option value="">?</option>${[1,2,3,4,5,6,7,8].map(n=>`<option value="${n}">${n}</option>`).join('')}</select>`;
+    return`<span class="term">${c}<span class="formula">${formula}</span></span>`;
+  });
+}
+function bindInputs(){
+  app.querySelectorAll('input.chem').forEach(inp=>{
+    const mode=inp.dataset.mode;
+    inp.addEventListener('input',()=>{
+      const r=liveConvert(inp.value,inp.selectionStart==null?inp.value.length:inp.selectionStart,mode);
+      if(r.val!==inp.value){inp.value=r.val;try{inp.setSelectionRange(r.caret,r.caret);}catch(e){}}
+      inp.classList.remove('ok','bad');
+    });
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const b=$('#btnCheck');if(b&&!b.disabled)b.click();}});
+  });
+  app.querySelectorAll('.kbd').forEach(kb=>{
+    const inp=kb.parentElement.querySelector('input.chem');
+    kb.querySelectorAll('.key').forEach(btn=>{
+      btn.addEventListener('mousedown',e=>e.preventDefault());
+      btn.addEventListener('click',()=>{
+        if(inp.disabled)return;
+        const s=inp.selectionStart==null?inp.value.length:inp.selectionStart,e2=inp.selectionEnd==null?s:inp.selectionEnd,t=btn.dataset.ins;
+        inp.value=inp.value.slice(0,s)+t+inp.value.slice(e2);
+        const p=s+t.length;inp.focus();try{inp.setSelectionRange(p,p);}catch(e){}
+        inp.classList.remove('ok','bad');
+      });
+    });
+  });
+}
+function collect(){
+  const v={};
+  app.querySelectorAll('input.chem').forEach(i=>v[i.dataset.id]=i.value);
+  const bi=app.querySelectorAll('[data-bi]');
+  if(bi.length){v.bal=[];bi.forEach(s=>{v.bal[+s.dataset.bi]=s.tagName==='SELECT'?s.value:s.dataset.v;});}
+  return v;
+}
+
+/* =====================  ABLAUF  ===================== */
+let R=null;
+const cur=()=>R.tasks[R.idx];
+function updateXP(){const b=$('#xpbox');if(b)b.textContent=`⭐ ${S.xp} XP · ${rank(S.xp)}`;}
+const starStr=n=>'★'.repeat(n)+'☆'.repeat(3-n);
+
+function home(){
+  R=null;updateXP();
+  app.innerHTML=`<h1>Willkommen im Salz-Labor! 🧪</h1>
+  <p class="lead">Übe Schritt für Schritt: Ionen → Verhältnisformeln → Reaktionsgleichungen von Salzbildung und Salzelektrolyse. Sammle Sterne und XP!</p>
+  <div class="howto"><b>So gibst du Formeln ein:</b> Zahlen direkt hinter einem Buchstaben werden automatisch <b>tiefgestellt</b> (Cl2 → Cl₂). Bei Ionen werden sie <b>hochgestellt</b> (Al3+ → Al³⁺). Mit <b>-&gt;</b> entsteht der Pfeil →. Unter jedem Feld findest du zusätzlich Tasten. Im <b>📋 Spickzettel</b> (oben rechts) stehen die wichtigsten Regeln.</div>
+  <div class="grid">${MISSIONS.map(m=>`<section class="card mission"><h2>${m.icon} Mission ${m.id}: ${m.title}</h2><p>${m.desc}</p><div class="levels">${m.lv.map((n,i)=>{const st=S.stars['m'+m.id+'l'+(i+1)]||0;return`<button class="lvl" data-m="${m.id}" data-l="${i+1}" type="button"><b>Stufe ${i+1}</b><span class="n">${n}</span><span class="st">${starStr(st)}</span></button>`;}).join('')}</div></section>`).join('')}</div>`;
+  app.querySelectorAll('.lvl').forEach(b=>b.onclick=()=>startRound(+b.dataset.m,+b.dataset.l));
+  window.scrollTo(0,0);
+}
+function genRound(mod,lvl){
+  const ctx={used:new Set(),usedC:new Set(),i:0};
+  const tasks=[];
+  for(let i=0;i<ROUND;i++){
+    ctx.i=i;
+    const T=GEN[mod][lvl](ctx);
+    T.wrong=0;T.tippN=0;T.done=false;T.revealed=false;
+    tasks.push(T);
+  }
+  return tasks;
+}
+function startRound(mod,lvl){
+  R={mod,lvl,tasks:genRound(mod,lvl),idx:0,pts:0,streak:0,res:[]};
+  showTask();
+}
+function showTask(){
+  const T=cur(),m=MISSIONS[R.mod-1];
+  let prompt=T.prompt,extra='',fbs='';
+  T.fields.forEach(f=>{
+    const ph='{{'+f.id+'}}',h=fieldHTML(f);
+    if(prompt.includes(ph)){prompt=prompt.replace(ph,()=>h);fbs+=`<div class="fb" id="fb_${f.id}" aria-live="polite"></div>`;}
+    else extra+=h+`<div class="fb" id="fb_${f.id}" aria-live="polite"></div>`;
+  });
+  const dots=R.tasks.map((t,i)=>`<span class="dot ${i===R.idx?'cur ':''}${R.res[i]||''}"></span>`).join('');
+  app.innerHTML=`<div class="rbar"><button class="ghost dark" id="btnBack" type="button">← Übersicht</button>
+    <div class="rtitle">${m.icon} ${m.title} · Stufe ${R.lvl}: ${m.lv[R.lvl-1]}</div><div class="dots">${dots}</div><div class="rpts">⭐ ${R.pts}</div></div>
+  <section class="card task pop"><div class="qnum">Aufgabe ${R.idx+1} von ${R.tasks.length} · ${T.title}</div>
+    <div class="prompt">${prompt}</div>${extra}${fbs}
+    <div class="actions"><button class="btn" id="btnCheck" type="button">Prüfen ✓</button>
+      <button class="btn sec" id="btnTipp" type="button">💡 Tipp (−2)</button>
+      <button class="btn sec" id="btnSol" type="button" hidden>Lösung zeigen</button></div>
+    <div class="tippbox" id="tippbox"></div><div id="solbox"></div><div id="after"></div>
+  </section>`;
+  $('#btnBack').onclick=()=>{if(confirm('Runde abbrechen und zur Übersicht? Die Punkte dieser Runde bleiben erhalten.'))home();};
+  $('#btnCheck').onclick=doCheck;
+  $('#btnTipp').onclick=doTipp;
+  $('#btnSol').onclick=doReveal;
+  bindInputs();
+  const first=app.querySelector('input.chem,select');
+  if(first&&!/Mobi|Android/i.test(navigator.userAgent))first.focus();
+  window.scrollTo(0,0);
+}
+function showFB(per){
+  Object.entries(per).forEach(([id,r])=>{
+    const e=$('#fb_'+id);
+    if(e){e.className='fb '+(r.neutral?'info':r.ok?'ok':'bad');e.innerHTML=r.msg;}
+    const inp=$('#in_'+id);
+    if(inp&&!r.neutral){inp.classList.remove('ok','bad');inp.classList.add(r.ok?'ok':'bad');}
+  });
+}
+function doCheck(){
+  const T=cur();if(T.done)return;
+  const per=T.check(collect(),T.wrong+1);
+  const vals=Object.values(per);
+  const neutral=vals.some(r=>r.neutral);
+  const ok=vals.every(r=>r.ok);
+  showFB(per);
+  if(neutral)return;
+  if(ok){finishTask(true,false);return;}
+  T.wrong++;
+  if(T.wrong>=2)$('#btnSol').hidden=false;
+}
+function doTipp(){
+  const T=cur();if(T.done)return;
+  if(T.tippN>=T.tipps.length)return;
+  const d=document.createElement('div');d.className='t';d.innerHTML=T.tipps[T.tippN];
+  $('#tippbox').appendChild(d);T.tippN++;
+  if(T.tippN>=T.tipps.length)$('#btnTipp').disabled=true;
+  else $('#btnTipp').textContent='💡 Noch ein Tipp (−2)';
+}
+function doReveal(){
+  const T=cur();if(T.done)return;
+  $('#solbox').innerHTML=`<div class="solbox"><b>Lösung:</b><br>${T.solution}</div>`;
+  finishTask(false,true);
+}
+function lock(){app.querySelectorAll('input.chem,select').forEach(x=>x.disabled=true);}
+function finishTask(ok,revealed){
+  const T=cur();T.done=true;T.revealed=revealed;
+  let pts=0,msg='';
+  if(ok){
+    pts=Math.max(2,10-3*T.wrong-2*T.tippN);
+    const clean=T.wrong===0&&T.tippN===0;
+    if(clean){R.streak++;if(R.streak>=3)pts+=2;}else R.streak=0;
+    R.res[R.idx]=clean?'first':'ok';
+    const praise=pick(['Richtig! 🎉','Stark! 💪','Genau so! ✅','Sauber gelöst! 🌟','Top! 🚀']);
+    msg=`<div class="fb ok pop"><b>${praise}</b> +${pts} Punkte${R.streak>=3?` · 🔥 ${R.streak} in Folge (Bonus +2)`:''}<p>${T.explain}</p></div>`;
+  }else{
+    R.streak=0;R.res[R.idx]='fail';
+    msg=`<div class="fb info"><b>Nicht schlimm – schau dir die Lösung genau an</b> und vergleiche sie mit deiner Überlegung. Diese Aufgabe gibt keine Punkte.<p>${T.explain}</p></div>`;
+  }
+  R.pts+=pts;S.xp+=pts;save();updateXP();
+  lock();
+  $('#btnCheck').disabled=true;$('#btnTipp').disabled=true;$('#btnSol').hidden=true;
+  const last=R.idx>=R.tasks.length-1;
+  $('#after').innerHTML=msg+`<div class="actions"><button class="btn go" id="btnNext" type="button">${last?'Ergebnis ansehen 🏁':'Weiter →'}</button></div>`;
+  $('#btnNext').onclick=()=>{if(last)summary();else{R.idx++;showTask();}};
+  $('#btnNext').focus();
+  const dots=app.querySelectorAll('.dot');if(dots[R.idx]){dots[R.idx].classList.remove('first','ok','fail');dots[R.idx].classList.add(R.res[R.idx]);}
+  const rp=$('.rpts');if(rp)rp.textContent='⭐ '+R.pts;
+}
+function summary(){
+  const max=R.tasks.length*10;
+  const pct=Math.min(1,R.pts/max);
+  const stars=pct>=.8?3:pct>=.55?2:pct>=.25?1:0;
+  const key='m'+R.mod+'l'+R.lvl;
+  const old=S.stars[key]||0;
+  S.stars[key]=Math.max(old,stars);save();updateXP();
+  const msgs=['Das war noch holprig – kein Problem! Nutze den Spickzettel und die Tipps und probiere es gleich nochmal.','Guter Anfang! Mit etwas Übung holst du dir bald mehr Sterne.','Stark! Fast perfekt – noch ein bisschen Feinschliff für den dritten Stern.','Wow, ausgezeichnet! Du beherrschst diese Stufe. 🏆'];
+  const m=MISSIONS[R.mod-1];
+  const icon={first:'✅',ok:'🟡',fail:'❌'};
+  app.innerHTML=`<section class="card center pop"><h1>Runde geschafft! 🏁</h1>
+    <div class="big">${starStr(stars)}</div>
+    <p><b>${R.pts}</b> Punkte in dieser Runde · Gesamt: <b>${S.xp} XP</b> (${rank(S.xp)})</p>
+    <p>${msgs[stars]}</p>
+    <ul class="res" style="list-style:none;padding:0;text-align:left;max-width:520px;margin:10px auto">${R.tasks.map((t,i)=>`<li>${icon[R.res[i]]||'❌'} Aufgabe ${i+1}: ${t.title}</li>`).join('')}</ul>
+    <p class="small">✅ sofort richtig · 🟡 mit Fehlern oder Tipps geschafft · ❌ Lösung angesehen</p>
+    <div class="actions" style="justify-content:center"><button class="btn" id="again" type="button">Nochmal (neue Aufgaben)</button>
+    ${R.lvl<MISSIONS[R.mod-1].lv.length?`<button class="btn go" id="nextL" type="button">Nächste Stufe →</button>`:''}
+    <button class="btn sec" id="toHome" type="button">Zur Übersicht</button></div></section>`;
+  $('#again').onclick=()=>startRound(R.mod,R.lvl);
+  if($('#nextL'))$('#nextL').onclick=()=>startRound(R.mod,R.lvl+1);
+  $('#toHome').onclick=home;
+  window.scrollTo(0,0);
+}
+
+/* =====================  INIT  ===================== */
+function toggleModal(on){const m=$('#modal');m.hidden=!on;}
+function init(){
+  app=document.getElementById('app');
+  $('#btnHelp').onclick=()=>toggleModal(true);
+  $('#closeM').onclick=()=>toggleModal(false);
+  $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')toggleModal(false);});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')toggleModal(false);});
+  $('#brand').onclick=()=>{if(!R||confirm('Zur Übersicht wechseln?'))home();};
+  home();
+}
+if(typeof document!=='undefined'&&document.getElementById&&document.getElementById('app'))init();
+</script>
+</body>
+</html>
